@@ -63,30 +63,43 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        throw new RuntimeException("Not implemented");
+        return switch (this.type) {
+            case PAWN -> pawnMoves(board, myPosition);
+            case BISHOP -> bishopMoves(board, myPosition);
+            case KNIGHT -> knightMoves(board, myPosition);
+            case ROOK -> rookMoves(board, myPosition);
+            case QUEEN -> queenMoves(board, myPosition);
+            case KING -> kingMoves(board, myPosition);
+        };
     }
 
     private Collection<ChessMove> pawnMoves(ChessBoard board, ChessPosition myPosition){
-        throw new RuntimeException("Not implemented");
+        return null;
+        // throw new RuntimeException("Not implemented");
     }
 
     private Collection<ChessMove> bishopMoves(ChessBoard board, ChessPosition myPosition){
-        throw new RuntimeException("Not implemented");
+        return null;
+        // throw new RuntimeException("Not implemented");
     }
 
     private Collection<ChessMove> knightMoves(ChessBoard board, ChessPosition myPosition){
-        throw new RuntimeException("Not implemented");
+        return null;
+        // throw new RuntimeException("Not implemented");
     }
 
     private Collection<ChessMove> rookMoves(ChessBoard board, ChessPosition myPosition){
-        throw new RuntimeException("Not implemented");
+        return null;
+        // throw new RuntimeException("Not implemented");
     }
 
     private Collection<ChessMove> queenMoves(ChessBoard board, ChessPosition myPosition){
-        throw new RuntimeException("Not implemented");
+        return null;
+        // throw new RuntimeException("Not implemented");
     }
 
     private Collection<ChessMove> kingMoves(ChessBoard board, ChessPosition myPosition){
-        throw new RuntimeException("Not implemented");
+        return null;
+        // throw new RuntimeException("Not implemented");
     }
 }

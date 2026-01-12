@@ -57,4 +57,12 @@ public class ChessPosition {
         return this.col;
     }
 
+    /**
+     *
+     * @return array of row, column
+     */
+    public int[] getPos(){
+        return new int[] {this.row, this.col};
+    }
+
 }

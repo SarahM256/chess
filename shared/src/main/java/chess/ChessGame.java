@@ -1,6 +1,8 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -36,6 +38,27 @@ public class ChessGame {
     public enum TeamColor {
         WHITE,
         BLACK
+    }
+
+    /**
+     * promotion possibilities by pawn row (indexes are row-2 for WHITE, 7-row for BLACK)
+     */
+    public static ArrayList<ArrayList<ChessPiece.PieceType>> promotionPieces = new ArrayList<>(List.of(
+            new ArrayList<>(){{add(null);}},
+            new ArrayList<>(){{add(null);}},
+            new ArrayList<>(){{add(null);}},
+            new ArrayList<>(){{add(null);}},
+            new ArrayList<>(){{add(null);}},
+            new ArrayList<>(List.of(
+                    ChessPiece.PieceType.QUEEN,
+                    ChessPiece.PieceType.BISHOP,
+                    ChessPiece.PieceType.KNIGHT,
+                    ChessPiece.PieceType.ROOK
+            ))
+    ));
+
+    public static boolean isValidSquare(int row, int col){
+        return 1 <= row && row <= 8 && 1 <= col && col <= 8;
     }
 
     /**

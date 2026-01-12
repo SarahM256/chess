@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.Collection;
+import java.util.ArrayList;
 
 /**
  * Represents a single chess piece
@@ -73,9 +74,76 @@ public class ChessPiece {
         };
     }
 
+    /**
+     * Given a potential move square, checks if a pawn can move there
+     * If so, it adds the move to a list of possible moves
+     *
+     * @param posToCheck the position it checks for move validity
+     * @param moves the list of moves to add to
+     * @param isCapturing whether the move would be a capture
+     */
+    private void addPossiblePawnMoves(ChessBoard board, ChessPosition myPosition, ChessPosition posToCheck, Collection<ChessMove> moves, boolean isCapturing){
+        int myRow = myPosition.getRow();
+        int myCol = myPosition.getColumn();
+        int startRow;
+        int doubleMove;
+        int promotionPiecesIndex; // where to look for whether the pawn can promote
+        if(this.pieceColor == ChessGame.TeamColor.WHITE){
+            startRow = 2;
+            doubleMove = 2;
+            promotionPiecesIndex = myRow - 2;
+        } else {
+            startRow = 7;
+            doubleMove = -2;
+            promotionPiecesIndex = 7 - myRow;
+        }
+        ChessPiece pieceOnSquare = board.getPiece(posToCheck);
+        if(!isCapturing){
+            if (pieceOnSquare == null) {
+                for(var prom: ChessGame.promotionPieces.get(promotionPiecesIndex)){
+                    moves.add(new ChessMove(myPosition, posToCheck, prom));
+                }
+                if(myRow==startRow && posToCheck.getRow() != myRow + doubleMove){
+                    // moving two squares on first move
+                    addPossiblePawnMoves(board, myPosition, new ChessPosition(myRow + doubleMove, myCol), moves, false);
+                }
+            }
+        } else {
+            if (pieceOnSquare != null && pieceOnSquare.getTeamColor() != this.pieceColor){
+                for(var prom: ChessGame.promotionPieces.get(promotionPiecesIndex)){
+                    moves.add(new ChessMove(myPosition, posToCheck, prom));
+                }
+            }
+        }
+    }
+
+    /**
+     * Calculates pawn moves
+     *
+     * @return Collection of valid moves
+     */
     private Collection<ChessMove> pawnMoves(ChessBoard board, ChessPosition myPosition){
-        return null;
-        // throw new RuntimeException("Not implemented");
+        int myRow = myPosition.getRow();
+        int myCol = myPosition.getColumn();
+        ArrayList<ChessMove> moves = new ArrayList<ChessMove>();
+        ChessPosition posToCheck;
+        int direction = this.pieceColor == ChessGame.TeamColor.WHITE ? 1 : -1;
+        boolean validRow = this.pieceColor == ChessGame.TeamColor.WHITE ? myRow <= 7 : myRow >= 2;
+        if(validRow) {
+            posToCheck = new ChessPosition(myRow + direction, myCol);
+            addPossiblePawnMoves(board, myPosition, posToCheck, moves, false);
+            if(myCol > 1) {
+                // capturing left
+                posToCheck = new ChessPosition(myRow + direction, myCol - 1);
+                addPossiblePawnMoves(board, myPosition, posToCheck, moves, true);
+            }
+            if(myCol < 8){
+                // capturing right
+                posToCheck = new ChessPosition(myRow + direction, myCol + 1);
+                addPossiblePawnMoves(board, myPosition, posToCheck, moves, true);
+            }
+        }
+        return moves;
     }
 
     private Collection<ChessMove> bishopMoves(ChessBoard board, ChessPosition myPosition){

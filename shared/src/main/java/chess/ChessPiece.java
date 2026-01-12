@@ -77,8 +77,7 @@ public class ChessPiece {
         return switch (this.type) {
             case PAWN -> pawnMoves(board, myPosition);
             case BISHOP, ROOK, QUEEN -> distancePieceMoves(board, myPosition);
-            case KNIGHT -> knightMoves(board, myPosition);
-            case KING -> kingMoves(board, myPosition);
+            case KNIGHT, KING -> notDistancePieceMoves(board, myPosition);
         };
     }
 
@@ -171,12 +170,11 @@ public class ChessPiece {
     }
 
     private Collection<ChessMove> distancePieceMoves(ChessBoard board, ChessPosition myPosition){
-        int[] myPos = new int[] {myPosition.getRow(), myPosition.getColumn()};
         ArrayList<ChessMove> moves = new ArrayList<ChessMove>();
         int[] posToCheck;
         int[][] myDirections = pieceDirections.get(this.type);
         for(var dir: myDirections){
-            posToCheck = new int[] {myPos[0], myPos[1]};
+            posToCheck = myPosition.getPos();
             do {
                 posToCheck[0] += dir[0];
                 posToCheck[1] += dir[1];
@@ -185,21 +183,18 @@ public class ChessPiece {
         return moves;
     }
 
-    private Collection<ChessMove> knightMoves(ChessBoard board, ChessPosition myPosition){
-        int myRow = myPosition.getRow();
-        int myCol = myPosition.getColumn();
+    private Collection<ChessMove> notDistancePieceMoves(ChessBoard board, ChessPosition myPosition){
         ArrayList<ChessMove> moves = new ArrayList<ChessMove>();
-        ChessPosition posToCheck;
-
-        return moves;
-    }
-
-    private Collection<ChessMove> kingMoves(ChessBoard board, ChessPosition myPosition){
-        int myRow = myPosition.getRow();
-        int myCol = myPosition.getColumn();
-        ArrayList<ChessMove> moves = new ArrayList<ChessMove>();
-        ChessPosition posToCheck;
-
+        int[] posToCheck;
+        int[][] myDirections = pieceDirections.get(this.type);
+        for(var dir: myDirections){
+            posToCheck = myPosition.getPos();
+            posToCheck[0] += dir[0];
+            posToCheck[1] += dir[1];
+            if (ChessGame.isValidSquare(posToCheck)){
+                addPossibleNotPawnMoves(board, myPosition, new ChessPosition(posToCheck), moves);
+            }
+        }
         return moves;
     }
 }

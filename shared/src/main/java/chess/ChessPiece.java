@@ -185,17 +185,6 @@ public class ChessPiece {
         return moves;
     }
 
-    // trying to put bishop, rook, queen in one method
-//
-//    private Collection<ChessMove> queenMoves(ChessBoard board, ChessPosition myPosition){
-//        int myRow = myPosition.getRow();
-//        int myCol = myPosition.getColumn();
-//        ArrayList<ChessMove> moves = new ArrayList<ChessMove>();
-//        ChessPosition posToCheck;
-//
-//        return moves;
-//    }
-
     private Collection<ChessMove> knightMoves(ChessBoard board, ChessPosition myPosition){
         int myRow = myPosition.getRow();
         int myCol = myPosition.getColumn();

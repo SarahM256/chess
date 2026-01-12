@@ -2,6 +2,8 @@ package chess;
 
 import java.util.Collection;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Represents a single chess piece
@@ -42,6 +44,14 @@ public class ChessPiece {
         PAWN
     }
 
+    private Map<PieceType, int[][]> pieceDirections = new HashMap<>(){{
+        put(PieceType.BISHOP, new int[][] {{1,1},{-1,1},{-1,-1},{1,-1}});
+        put(PieceType.ROOK, new int[][] {{1,0},{0,1},{-1,0},{0,-1}});
+        put(PieceType.QUEEN, new int[][] {{1,1},{-1,1},{-1,-1},{1,-1},{1,0},{0,1},{-1,0},{0,-1}});
+        put(PieceType.KING, new int[][] {{1,1},{-1,1},{-1,-1},{1,-1},{1,0},{0,1},{-1,0},{0,-1}});
+        put(PieceType.KNIGHT, new int[][] {{1,2},{2,1},{-1,2},{2,-1},{1,-2},{-2,1},{-1,-2},{-2,-1}});
+    }};
+
     /**
      * @return Which team this chess piece belongs to
      */
@@ -66,10 +76,8 @@ public class ChessPiece {
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         return switch (this.type) {
             case PAWN -> pawnMoves(board, myPosition);
-            case BISHOP -> bishopMoves(board, myPosition);
+            case BISHOP, ROOK, QUEEN -> distancePieceMoves(board, myPosition);
             case KNIGHT -> knightMoves(board, myPosition);
-            case ROOK -> rookMoves(board, myPosition);
-            case QUEEN -> queenMoves(board, myPosition);
             case KING -> kingMoves(board, myPosition);
         };
     }
@@ -118,6 +126,22 @@ public class ChessPiece {
     }
 
     /**
+     * Given a potential move square, checks if a piece (not a pawn) can move there
+     * If so, it adds the move to a list of possible moves
+     *
+     * @param posToCheck the position it checks for move validity
+     * @param moves the list of moves to add to
+     * @return True if the position is empty (i.e. a piece can keep moving)
+     */
+    private boolean addPossibleNotPawnMoves(ChessBoard board, ChessPosition myPosition, ChessPosition posToCheck, Collection<ChessMove> moves){
+        ChessPiece pieceOnSquare = board.getPiece(posToCheck);
+        if (pieceOnSquare == null || pieceOnSquare.getTeamColor() != this.pieceColor){
+            moves.add(new ChessMove(myPosition, posToCheck, null));
+        }
+        return pieceOnSquare==null;
+    }
+
+    /**
      * Calculates pawn moves
      *
      * @return Collection of valid moves
@@ -146,28 +170,65 @@ public class ChessPiece {
         return moves;
     }
 
-    private Collection<ChessMove> bishopMoves(ChessBoard board, ChessPosition myPosition){
-        return null;
-        // throw new RuntimeException("Not implemented");
+    private Collection<ChessMove> distancePieceMoves(ChessBoard board, ChessPosition myPosition){
+        int[] myPos = new int[] {myPosition.getRow(), myPosition.getColumn()};
+        ArrayList<ChessMove> moves = new ArrayList<ChessMove>();
+        int[] posToCheck;
+        int[][] myDirections = pieceDirections.get(this.type);
+        for(var dir: myDirections){
+            posToCheck = new int[] {myPos[0], myPos[1]};
+            do {
+                posToCheck[0] += dir[0];
+                posToCheck[1] += dir[1];
+            } while (ChessGame.isValidSquare(posToCheck) && addPossibleNotPawnMoves(board, myPosition, new ChessPosition(posToCheck), moves));
+        }
+        return moves;
     }
+
+    // trying to put bishop, rook, queen in one method
+
+//    private Collection<ChessMove> bishopMoves(ChessBoard board, ChessPosition myPosition){
+//        int myRow = myPosition.getRow();
+//        int myCol = myPosition.getColumn();
+//        ArrayList<ChessMove> moves = new ArrayList<ChessMove>();
+//        ChessPosition posToCheck;
+//
+//        return moves;
+//    }
+//
+//    private Collection<ChessMove> rookMoves(ChessBoard board, ChessPosition myPosition){
+//        int myRow = myPosition.getRow();
+//        int myCol = myPosition.getColumn();
+//        ArrayList<ChessMove> moves = new ArrayList<ChessMove>();
+//        ChessPosition posToCheck;
+//
+//        return moves;
+//    }
+//
+//    private Collection<ChessMove> queenMoves(ChessBoard board, ChessPosition myPosition){
+//        int myRow = myPosition.getRow();
+//        int myCol = myPosition.getColumn();
+//        ArrayList<ChessMove> moves = new ArrayList<ChessMove>();
+//        ChessPosition posToCheck;
+//
+//        return moves;
+//    }
 
     private Collection<ChessMove> knightMoves(ChessBoard board, ChessPosition myPosition){
-        return null;
-        // throw new RuntimeException("Not implemented");
-    }
+        int myRow = myPosition.getRow();
+        int myCol = myPosition.getColumn();
+        ArrayList<ChessMove> moves = new ArrayList<ChessMove>();
+        ChessPosition posToCheck;
 
-    private Collection<ChessMove> rookMoves(ChessBoard board, ChessPosition myPosition){
-        return null;
-        // throw new RuntimeException("Not implemented");
-    }
-
-    private Collection<ChessMove> queenMoves(ChessBoard board, ChessPosition myPosition){
-        return null;
-        // throw new RuntimeException("Not implemented");
+        return moves;
     }
 
     private Collection<ChessMove> kingMoves(ChessBoard board, ChessPosition myPosition){
-        return null;
-        // throw new RuntimeException("Not implemented");
+        int myRow = myPosition.getRow();
+        int myCol = myPosition.getColumn();
+        ArrayList<ChessMove> moves = new ArrayList<ChessMove>();
+        ChessPosition posToCheck;
+
+        return moves;
     }
 }

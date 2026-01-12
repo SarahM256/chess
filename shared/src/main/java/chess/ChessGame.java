@@ -61,6 +61,10 @@ public class ChessGame {
         return 1 <= row && row <= 8 && 1 <= col && col <= 8;
     }
 
+    public static boolean isValidSquare(int[] pos){
+        return isValidSquare(pos[0], pos[1]);
+    }
+
     /**
      * Gets a valid moves for a piece at the given location
      *

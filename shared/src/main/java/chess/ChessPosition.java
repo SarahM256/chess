@@ -37,6 +37,10 @@ public class ChessPosition {
         this.col = col;
     }
 
+    public ChessPosition(int[] pos) {
+        this(pos[0], pos[1]);
+    }
+
     /**
      * @return which row this position is in
      * 1 codes for the bottom row

@@ -130,7 +130,7 @@ public class ChessPiece {
      *
      * @param posToCheck the position it checks for move validity
      * @param moves the list of moves to add to
-     * @return True if the position is empty (i.e. a piece can keep moving)
+     * @return True if the position is empty (i.e. a (distance) piece can keep moving)
      */
     private boolean addPossibleNotPawnMoves(ChessBoard board, ChessPosition myPosition, ChessPosition posToCheck, Collection<ChessMove> moves){
         ChessPiece pieceOnSquare = board.getPiece(posToCheck);
@@ -169,6 +169,11 @@ public class ChessPiece {
         return moves;
     }
 
+    /**
+     * Calculates possible moves for Bishop, Rook, and Queen (which continue along empty lines)
+     *
+     * @return the list of possible moves
+     */
     private Collection<ChessMove> distancePieceMoves(ChessBoard board, ChessPosition myPosition){
         ArrayList<ChessMove> moves = new ArrayList<ChessMove>();
         int[] posToCheck;
@@ -183,6 +188,11 @@ public class ChessPiece {
         return moves;
     }
 
+    /**
+     * Calculates possible moves for King and Knight (which don't keep going)
+     *
+     * @return the list of possible moves
+     */
     private Collection<ChessMove> notDistancePieceMoves(ChessBoard board, ChessPosition myPosition){
         ArrayList<ChessMove> moves = new ArrayList<ChessMove>();
         int[] posToCheck;

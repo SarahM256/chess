@@ -1,9 +1,6 @@
 package chess;
 
-import java.util.Collection;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Represents a single chess piece
@@ -42,6 +39,31 @@ public class ChessPiece {
         KNIGHT,
         ROOK,
         PAWN
+    }
+
+    /**
+     * promotion possibilities by pawn row (indexes are row-2 for WHITE, 7-row for BLACK)
+     */
+    public static ArrayList<ArrayList<ChessPiece.PieceType>> promotionPieces = new ArrayList<>(List.of(
+            new ArrayList<>(){{add(null);}},
+            new ArrayList<>(){{add(null);}},
+            new ArrayList<>(){{add(null);}},
+            new ArrayList<>(){{add(null);}},
+            new ArrayList<>(){{add(null);}},
+            new ArrayList<>(List.of(
+                    ChessPiece.PieceType.QUEEN,
+                    ChessPiece.PieceType.BISHOP,
+                    ChessPiece.PieceType.KNIGHT,
+                    ChessPiece.PieceType.ROOK
+            ))
+    ));
+
+    public static boolean isValidSquare(int row, int col){
+        return 1 <= row && row <= 8 && 1 <= col && col <= 8;
+    }
+
+    public static boolean isValidSquare(int[] pos){
+        return isValidSquare(pos[0], pos[1]);
     }
 
     private Map<PieceType, int[][]> pieceDirections = new HashMap<>(){{
@@ -107,7 +129,7 @@ public class ChessPiece {
         ChessPiece pieceOnSquare = board.getPiece(posToCheck);
         if(!isCapturing){
             if (pieceOnSquare == null) {
-                for(var prom: ChessGame.promotionPieces.get(promotionPiecesIndex)){
+                for(var prom: ChessPiece.promotionPieces.get(promotionPiecesIndex)){
                     moves.add(new ChessMove(myPosition, posToCheck, prom));
                 }
                 if(myRow==startRow && posToCheck.getRow() != myRow + doubleMove){
@@ -117,7 +139,7 @@ public class ChessPiece {
             }
         } else {
             if (pieceOnSquare != null && pieceOnSquare.getTeamColor() != this.pieceColor){
-                for(var prom: ChessGame.promotionPieces.get(promotionPiecesIndex)){
+                for(var prom: ChessPiece.promotionPieces.get(promotionPiecesIndex)){
                     moves.add(new ChessMove(myPosition, posToCheck, prom));
                 }
             }
@@ -183,7 +205,7 @@ public class ChessPiece {
             do {
                 posToCheck[0] += dir[0];
                 posToCheck[1] += dir[1];
-            } while (ChessGame.isValidSquare(posToCheck) && addPossibleNotPawnMoves(board, myPosition, new ChessPosition(posToCheck), moves));
+            } while (ChessPiece.isValidSquare(posToCheck) && addPossibleNotPawnMoves(board, myPosition, new ChessPosition(posToCheck), moves));
         }
         return moves;
     }
@@ -201,7 +223,7 @@ public class ChessPiece {
             posToCheck = myPosition.getPos();
             posToCheck[0] += dir[0];
             posToCheck[1] += dir[1];
-            if (ChessGame.isValidSquare(posToCheck)){
+            if (ChessPiece.isValidSquare(posToCheck)){
                 addPossibleNotPawnMoves(board, myPosition, new ChessPosition(posToCheck), moves);
             }
         }

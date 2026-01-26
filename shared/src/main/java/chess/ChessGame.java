@@ -41,31 +41,6 @@ public class ChessGame {
     }
 
     /**
-     * promotion possibilities by pawn row (indexes are row-2 for WHITE, 7-row for BLACK)
-     */
-    public static ArrayList<ArrayList<ChessPiece.PieceType>> promotionPieces = new ArrayList<>(List.of(
-            new ArrayList<>(){{add(null);}},
-            new ArrayList<>(){{add(null);}},
-            new ArrayList<>(){{add(null);}},
-            new ArrayList<>(){{add(null);}},
-            new ArrayList<>(){{add(null);}},
-            new ArrayList<>(List.of(
-                    ChessPiece.PieceType.QUEEN,
-                    ChessPiece.PieceType.BISHOP,
-                    ChessPiece.PieceType.KNIGHT,
-                    ChessPiece.PieceType.ROOK
-            ))
-    ));
-
-    public static boolean isValidSquare(int row, int col){
-        return 1 <= row && row <= 8 && 1 <= col && col <= 8;
-    }
-
-    public static boolean isValidSquare(int[] pos){
-        return isValidSquare(pos[0], pos[1]);
-    }
-
-    /**
      * Gets a valid moves for a piece at the given location
      *
      * @param startPosition the piece to get valid moves for

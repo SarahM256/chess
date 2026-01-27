@@ -31,8 +31,10 @@ public class ChessBoard {
         emptyBoard();
     }
 
-    private ArrayList<ChessPosition> whitePieceSquares = new ArrayList<>();
-    private ArrayList<ChessPosition> blackPieceSquares = new ArrayList<>();
+    private Map<ChessGame.TeamColor, ArrayList<ChessPosition>> teamSquares = new HashMap<>(){{
+        put(ChessGame.TeamColor.WHITE, new ArrayList<>());
+        put(ChessGame.TeamColor.BLACK, new ArrayList<>());
+    }};
 
     /**
      * Adds a chess piece to the chessboard
@@ -42,10 +44,8 @@ public class ChessBoard {
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
         board.put(position, piece);
-        if(piece.getTeamColor() == ChessGame.TeamColor.WHITE){
-            whitePieceSquares.add(position);
-        } else if (piece.getTeamColor() == ChessGame.TeamColor.BLACK) {
-            blackPieceSquares.add(position);
+        if(piece != null){
+            teamSquares.get(piece.getTeamColor()).add(position);
         }
     }
 

@@ -1,4 +1,5 @@
 package chess;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -30,6 +31,9 @@ public class ChessBoard {
         emptyBoard();
     }
 
+    private ArrayList<ChessPosition> whitePieceSquares;
+    private ArrayList<ChessPosition> blackPieceSquares;
+
     /**
      * Adds a chess piece to the chessboard
      *
@@ -38,6 +42,11 @@ public class ChessBoard {
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
         board.put(position, piece);
+        if(piece.getTeamColor() == ChessGame.TeamColor.WHITE){
+            whitePieceSquares.add(position);
+        } else if (piece.getTeamColor() == ChessGame.TeamColor.BLACK) {
+            blackPieceSquares.add(position);
+        }
     }
 
     /**

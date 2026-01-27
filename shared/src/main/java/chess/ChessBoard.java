@@ -31,8 +31,8 @@ public class ChessBoard {
         emptyBoard();
     }
 
-    private ArrayList<ChessPosition> whitePieceSquares;
-    private ArrayList<ChessPosition> blackPieceSquares;
+    private ArrayList<ChessPosition> whitePieceSquares = new ArrayList<>();
+    private ArrayList<ChessPosition> blackPieceSquares = new ArrayList<>();
 
     /**
      * Adds a chess piece to the chessboard

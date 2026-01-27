@@ -31,7 +31,7 @@ public class ChessBoard {
         emptyBoard();
     }
 
-    private Map<ChessGame.TeamColor, ArrayList<ChessPosition>> teamSquares = new HashMap<>(){{
+    public Map<ChessGame.TeamColor, ArrayList<ChessPosition>> teamSquares = new HashMap<>(){{
         put(ChessGame.TeamColor.WHITE, new ArrayList<>());
         put(ChessGame.TeamColor.BLACK, new ArrayList<>());
     }};

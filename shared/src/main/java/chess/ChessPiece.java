@@ -111,7 +111,8 @@ public class ChessPiece {
      * @param moves the list of moves to add to
      * @param isCapturing whether the move would be a capture
      */
-    private void addPossiblePawnMoves(ChessBoard board, ChessPosition myPosition, ChessPosition posToCheck, Collection<ChessMove> moves, boolean isCapturing){
+    private void addPossiblePawnMoves(ChessBoard board, ChessPosition myPosition, ChessPosition posToCheck,
+                                      Collection<ChessMove> moves, boolean isCapturing){
         int myRow = myPosition.getRow();
         int myCol = myPosition.getColumn();
         int startRow;
@@ -170,7 +171,7 @@ public class ChessPiece {
     private Collection<ChessMove> pawnMoves(ChessBoard board, ChessPosition myPosition){
         int myRow = myPosition.getRow();
         int myCol = myPosition.getColumn();
-        ArrayList<ChessMove> moves = new ArrayList<ChessMove>();
+        ArrayList<ChessMove> moves = new ArrayList<>();
         ChessPosition posToCheck;
         int direction = this.pieceColor == ChessGame.TeamColor.WHITE ? 1 : -1;
         boolean validRow = this.pieceColor == ChessGame.TeamColor.WHITE ? myRow <= 7 : myRow >= 2;

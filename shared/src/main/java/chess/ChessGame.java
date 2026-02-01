@@ -28,10 +28,14 @@ public class ChessGame {
 
     private TeamColor turn;
     private ChessBoard board;
+    private ChessPosition wkSquare;
+    private ChessPosition bkSquare;
     public ChessGame() {
         turn = TeamColor.WHITE;
         board = new ChessBoard();
         board.resetBoard();
+        wkSquare = new ChessPosition(1, 5);
+        bkSquare = new ChessPosition(8, 5);
     }
 
     /**
@@ -56,6 +60,14 @@ public class ChessGame {
     public enum TeamColor {
         WHITE,
         BLACK
+    }
+
+    public TeamColor opponent(TeamColor color){
+        if(color == TeamColor.WHITE){
+            return TeamColor.BLACK;
+        } else {
+            return TeamColor.WHITE;
+        }
     }
 
     /**
@@ -103,6 +115,14 @@ public class ChessGame {
         return valid;
     }
 
+    private ChessPosition kingSquare(TeamColor color){
+        if(color == TeamColor.WHITE){
+            return wkSquare;
+        } else {
+            return bkSquare;
+        }
+    }
+
     /**
      * Determines if the given team is in check
      *
@@ -110,7 +130,12 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        // throw new RuntimeException("Not implemented");
+        TeamColor opp = opponent(teamColor);
+        for(var square : board.teamSquares.get(opp)){
+            if(board.getPiece(square).canSeeSquare(kingSquare(teamColor), board, square)){
+                return true;
+            }
+        }
         return false;
     }
 

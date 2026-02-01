@@ -88,6 +88,16 @@ public class ChessPiece {
         return this.type;
     }
 
+
+    public boolean canSeeSquare(ChessPosition square, ChessBoard board, ChessPosition myPosition){
+        for(ChessMove move : pieceMoves(board, myPosition)){
+            if(move.getEndPosition().equals(square)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Calculates all the positions a chess piece can move to
      * Does not take into account moves that are illegal due to leaving the king in

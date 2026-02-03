@@ -25,6 +25,13 @@ public class ChessBoard {
         return Objects.hashCode(board);
     }
 
+    @Override
+    public String toString() {
+        return "ChessBoard{" +
+                "board=" + board +
+                '}';
+    }
+
     public Map<ChessPosition, ChessPiece> board;
     public ChessBoard() {
         this.board = new HashMap<>();
@@ -74,16 +81,16 @@ public class ChessBoard {
         int[] pieceRows = {1, 8};
         int[] pawnRows = {2, 7};
         for(int i = 0; i<=1; i++){
-            board.put(new ChessPosition(pieceRows[i], 1), new ChessPiece(colors[i], ChessPiece.PieceType.ROOK));
-            board.put(new ChessPosition(pieceRows[i], 8), new ChessPiece(colors[i], ChessPiece.PieceType.ROOK));
-            board.put(new ChessPosition(pieceRows[i], 2), new ChessPiece(colors[i], ChessPiece.PieceType.KNIGHT));
-            board.put(new ChessPosition(pieceRows[i], 7), new ChessPiece(colors[i], ChessPiece.PieceType.KNIGHT));
-            board.put(new ChessPosition(pieceRows[i], 3), new ChessPiece(colors[i], ChessPiece.PieceType.BISHOP));
-            board.put(new ChessPosition(pieceRows[i], 6), new ChessPiece(colors[i], ChessPiece.PieceType.BISHOP));
-            board.put(new ChessPosition(pieceRows[i], 4), new ChessPiece(colors[i], ChessPiece.PieceType.QUEEN));
-            board.put(new ChessPosition(pieceRows[i], 5), new ChessPiece(colors[i], ChessPiece.PieceType.KING));
+            addPiece(new ChessPosition(pieceRows[i], 1), new ChessPiece(colors[i], ChessPiece.PieceType.ROOK));
+            addPiece(new ChessPosition(pieceRows[i], 8), new ChessPiece(colors[i], ChessPiece.PieceType.ROOK));
+            addPiece(new ChessPosition(pieceRows[i], 2), new ChessPiece(colors[i], ChessPiece.PieceType.KNIGHT));
+            addPiece(new ChessPosition(pieceRows[i], 7), new ChessPiece(colors[i], ChessPiece.PieceType.KNIGHT));
+            addPiece(new ChessPosition(pieceRows[i], 3), new ChessPiece(colors[i], ChessPiece.PieceType.BISHOP));
+            addPiece(new ChessPosition(pieceRows[i], 6), new ChessPiece(colors[i], ChessPiece.PieceType.BISHOP));
+            addPiece(new ChessPosition(pieceRows[i], 4), new ChessPiece(colors[i], ChessPiece.PieceType.QUEEN));
+            addPiece(new ChessPosition(pieceRows[i], 5), new ChessPiece(colors[i], ChessPiece.PieceType.KING));
             for(int j = 1; j<=8; j++){
-                board.put(new ChessPosition(pawnRows[i], j), new ChessPiece(colors[i], ChessPiece.PieceType.PAWN));
+                addPiece(new ChessPosition(pawnRows[i], j), new ChessPiece(colors[i], ChessPiece.PieceType.PAWN));
             }
         }
     }

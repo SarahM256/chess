@@ -96,6 +96,16 @@ public class ChessGame {
         if (!isValidMove(move, piece.getTeamColor())) {
             throw new InvalidMoveException();
         }
+        tryMove(move);
+    }
+
+    private void tryMove(ChessMove move){
+        ChessPosition start = move.getStartPosition();
+        ChessPiece piece = board.getPiece(start);
+        TeamColor pieceColor = board.getPiece(start).getTeamColor();
+        if (move.getPromotionPiece() != null){
+            board.addPiece(start, new ChessPiece(pieceColor, move.getPromotionPiece()));
+        }
         if(piece.getPieceType() == ChessPiece.PieceType.KING){
             if(piece.getTeamColor() == TeamColor.WHITE){
                 wkSquare = move.getEndPosition();
@@ -103,16 +113,7 @@ public class ChessGame {
                 bkSquare = move.getEndPosition();
             }
         }
-        tryMove(move);
-    }
-
-    private void tryMove(ChessMove move){
-        ChessPosition start = move.getStartPosition();
-        TeamColor pieceColor = board.getPiece(start).getTeamColor();
-        if (move.getPromotionPiece() != null){
-            board.addPiece(start, new ChessPiece(pieceColor, move.getPromotionPiece()));
-        }
-        board.addPiece(move.getEndPosition(), board.getPiece(start));
+        board.addPiece(move.getEndPosition(), piece);
         board.addPiece(start, null);
         board.teamSquares.get(pieceColor).remove(start);
         board.teamSquares.get(pieceColor).add(move.getEndPosition());
@@ -121,9 +122,13 @@ public class ChessGame {
 
     private boolean isValidMove(ChessMove move, TeamColor color){
         ChessBoard origBoard = board.getCopy();
+        ChessPosition origWS = wkSquare;
+        ChessPosition origBS = bkSquare;
         tryMove(move);
         boolean valid = !isInCheck(color);
         setBoard(origBoard);
+        wkSquare = origWS;
+        bkSquare = origBS;
         return valid;
     }
 
@@ -158,7 +163,7 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        if (turn != teamColor || !isInCheck(teamColor)){
+        if (!isInCheck(teamColor)){
             return false;
         }
         for (ChessPosition square : board.teamSquares.get(teamColor)){
@@ -177,7 +182,7 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        if (turn != teamColor || isInCheck(teamColor)){
+        if (isInCheck(teamColor)){
             return false;
         }
         for (ChessPosition square : board.teamSquares.get(teamColor)){

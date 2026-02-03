@@ -200,6 +200,19 @@ public class ChessGame {
      */
     public void setBoard(ChessBoard board) {
         this.board = board;
+        board.updateTeamSquares();
+        for (var square : board.teamSquares.get(TeamColor.WHITE)){
+            if (board.getPiece(square).getPieceType() == ChessPiece.PieceType.KING){
+                wkSquare = square;
+                break;
+            }
+        }
+        for (var square : board.teamSquares.get(TeamColor.BLACK)){
+            if (board.getPiece(square).getPieceType() == ChessPiece.PieceType.KING){
+                bkSquare = square;
+                break;
+            }
+        }
     }
 
     /**

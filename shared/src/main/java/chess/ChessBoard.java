@@ -27,9 +27,26 @@ public class ChessBoard {
 
     @Override
     public String toString() {
-        return "ChessBoard{" +
-                "board=" + board +
-                '}';
+        String boardString = "";
+        for (int row = 8; row >= 1; row--){
+            for (int col = 1; col <= 8; col ++){
+                ChessPiece piece = board.get(new ChessPosition(row, col));
+                if(piece == null){
+                    boardString += " ";
+                } else {
+                    boardString += switch (piece.getPieceType()) {
+                        case PAWN -> "P";
+                        case KNIGHT -> "N";
+                        case ROOK -> "R";
+                        case BISHOP -> "B";
+                        case QUEEN -> "Q";
+                        case KING -> "K";
+                    };
+                }
+            }
+            boardString += "\n";
+        }
+        return boardString;
     }
 
     public Map<ChessPosition, ChessPiece> board;
@@ -105,5 +122,19 @@ public class ChessBoard {
 
     public ChessBoard getCopy(){
         return new ChessBoard(new HashMap<>(board));
+    }
+
+    public void updateTeamSquares(){
+        teamSquares.get(ChessGame.TeamColor.WHITE).clear();
+        teamSquares.get(ChessGame.TeamColor.BLACK).clear();
+        for (int row = 8; row >= 1; row--){
+            for (int col = 1; col <= 8; col ++){
+                ChessPosition square = new ChessPosition(row, col);
+                ChessPiece piece = board.get(square);
+                if(piece != null){
+                    teamSquares.get(piece.getTeamColor()).add(square);
+                }
+            }
+        }
     }
 }

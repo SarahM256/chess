@@ -31,6 +31,10 @@ public class ChessBoard {
         emptyBoard();
     }
 
+    public ChessBoard(Map<ChessPosition, ChessPiece> board){
+        this.board = board;
+    }
+
     public Map<ChessGame.TeamColor, ArrayList<ChessPosition>> teamSquares = new HashMap<>(){{
         put(ChessGame.TeamColor.WHITE, new ArrayList<>());
         put(ChessGame.TeamColor.BLACK, new ArrayList<>());
@@ -90,5 +94,9 @@ public class ChessBoard {
                 board.put(new ChessPosition(i,j), null);
             }
         }
+    }
+
+    public ChessBoard getCopy(){
+        return new ChessBoard(new HashMap<>(board));
     }
 }

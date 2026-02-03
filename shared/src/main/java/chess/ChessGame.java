@@ -2,7 +2,6 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -82,7 +81,7 @@ public class ChessGame {
             return null;
         }
         ArrayList<ChessMove> moves = (ArrayList<ChessMove>) board.getPiece(startPosition).pieceMoves(board, startPosition);
-        moves.removeIf(move -> !isValidMove(move));
+        moves.removeIf(move -> !isValidMove(move, board.getPiece(startPosition).getTeamColor()));
         return moves;
     }
 
@@ -93,24 +92,37 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        if (!isValidMove(move)) {
+        ChessPiece piece = board.getPiece(move.getStartPosition());
+        if (!isValidMove(move, piece.getTeamColor())) {
             throw new InvalidMoveException();
+        }
+        if(piece.getPieceType() == ChessPiece.PieceType.KING){
+            if(piece.getTeamColor() == TeamColor.WHITE){
+                wkSquare = move.getEndPosition();
+            } else {
+                bkSquare = move.getEndPosition();
+            }
         }
         tryMove(move);
     }
 
     private void tryMove(ChessMove move){
+        ChessPosition start = move.getStartPosition();
+        TeamColor pieceColor = board.getPiece(start).getTeamColor();
         if (move.getPromotionPiece() != null){
-            board.addPiece(move.getStartPosition(), new ChessPiece(board.getPiece(move.getStartPosition()).getTeamColor(), move.getPromotionPiece()));
+            board.addPiece(start, new ChessPiece(pieceColor, move.getPromotionPiece()));
         }
-        board.addPiece(move.getEndPosition(), board.getPiece(move.getStartPosition()));
-        board.addPiece(move.getStartPosition(), null);
+        board.addPiece(move.getEndPosition(), board.getPiece(start));
+        board.addPiece(start, null);
+        board.teamSquares.get(pieceColor).remove(start);
+        board.teamSquares.get(pieceColor).add(move.getEndPosition());
+        board.teamSquares.get(opponent(pieceColor)).remove(move.getEndPosition());
     }
 
-    private boolean isValidMove(ChessMove move){
-        ChessBoard origBoard = getBoard();
+    private boolean isValidMove(ChessMove move, TeamColor color){
+        ChessBoard origBoard = board.getCopy();
         tryMove(move);
-        boolean valid = !isInCheck(turn);
+        boolean valid = !isInCheck(color);
         setBoard(origBoard);
         return valid;
     }

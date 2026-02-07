@@ -59,11 +59,6 @@ public class ChessBoard {
         this.board = board;
     }
 
-    public Map<ChessGame.TeamColor, ArrayList<ChessPosition>> teamSquares = new HashMap<>(){{
-        put(ChessGame.TeamColor.WHITE, new ArrayList<>());
-        put(ChessGame.TeamColor.BLACK, new ArrayList<>());
-    }};
-
     /**
      * Adds a chess piece to the chessboard
      *
@@ -72,9 +67,6 @@ public class ChessBoard {
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
         board.put(position, piece);
-        if(piece != null){
-            teamSquares.get(piece.getTeamColor()).add(position);
-        }
     }
 
     /**
@@ -86,6 +78,20 @@ public class ChessBoard {
      */
     public ChessPiece getPiece(ChessPosition position) {
         return board.get(position);
+    }
+
+
+    public ArrayList<ChessPosition> getTeamSquares(ChessGame.TeamColor color){
+        ArrayList<ChessPosition> squares = new ArrayList<>();
+        for (int row = 1; row <= 8; row++){
+            for (int col = 1; col <= 8; col++){
+                ChessPosition square = new ChessPosition(row, col);
+                if (board.get(square) != null && board.get(square).getTeamColor()==color){
+                    squares.add(square);
+                }
+            }
+        }
+        return squares;
     }
 
     /**
@@ -124,17 +130,7 @@ public class ChessBoard {
         return new ChessBoard(new HashMap<>(board));
     }
 
-    public void updateTeamSquares(){
-        teamSquares.get(ChessGame.TeamColor.WHITE).clear();
-        teamSquares.get(ChessGame.TeamColor.BLACK).clear();
-        for (int row = 8; row >= 1; row--){
-            for (int col = 1; col <= 8; col ++){
-                ChessPosition square = new ChessPosition(row, col);
-                ChessPiece piece = board.get(square);
-                if(piece != null){
-                    teamSquares.get(piece.getTeamColor()).add(square);
-                }
-            }
-        }
+    public Map<ChessPosition, ChessPiece> getBoard(){
+        return new HashMap<>(board);
     }
 }

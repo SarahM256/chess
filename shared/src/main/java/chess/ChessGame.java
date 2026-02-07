@@ -80,14 +80,8 @@ public class ChessGame {
         if (board.getPiece(startPosition) == null){
             return null;
         }
-        TeamColor teamColor = board.getPiece(startPosition).getTeamColor();
-        var squares = board.teamSquares.get(teamColor);
-        System.out.println("here we are in validMoves");
-        System.out.println(squares + " pre pieceMoves");
         ArrayList<ChessMove> moves = (ArrayList<ChessMove>) board.getPiece(startPosition).pieceMoves(board, startPosition);
-        System.out.println(squares + " post pieceMoves pre isInvalidMove");
         moves.removeIf(move -> isInvalidMove(move, board.getPiece(startPosition).getTeamColor()));
-        System.out.println(squares + " post isInvalidMove");
         return moves;
     }
 
@@ -99,10 +93,11 @@ public class ChessGame {
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
         ChessPiece piece = board.getPiece(move.getStartPosition());
-        if (isInvalidMove(move, piece.getTeamColor())) {
+        if (piece == null || piece.getTeamColor() != turn || isInvalidMove(move, piece.getTeamColor())) {
             throw new InvalidMoveException();
         }
         tryMove(move);
+        turn = opponent(turn);
     }
 
     private void tryMove(ChessMove move){
@@ -121,26 +116,16 @@ public class ChessGame {
         }
         board.addPiece(move.getEndPosition(), piece);
         board.addPiece(start, null);
-        board.teamSquares.get(pieceColor).remove(start);
-        board.teamSquares.get(opponent(pieceColor)).remove(move.getEndPosition());
     }
 
     private boolean isInvalidMove(ChessMove move, TeamColor color){
-        TeamColor teamColor = board.getPiece(move.getStartPosition()).getTeamColor();
-        var squares = board.teamSquares.get(teamColor);
-        System.out.println("here we are isInvalidMove");
-        System.out.println(squares + " pre copy and tryMove");
+        if (!board.getPiece(move.getStartPosition()).pieceMoves(board, move.getStartPosition()).contains(move)){
+            return true;
+        }
         ChessBoard origBoard = board.getCopy();
         tryMove(move);
-        System.out.println(squares + " post copy and tryMove pre isInCheck and setBoard");
         boolean invalid = isInCheck(color);
         setBoard(origBoard);
-        squares = board.teamSquares.get(teamColor);
-        // OK I GET IT NOW
-        // BOARD ITSELF IS CHANGING SO THE SQUARES IS JUST OUTDATED IF YOU DON'T REASSIGN IT
-        // ASSAGASDKGJNASDFNLKASNDFNASDNGALSNKDF
-        // will fix this later
-        System.out.println(squares + " post isInCheck and setBoard");
         return invalid;
     }
 
@@ -160,7 +145,8 @@ public class ChessGame {
      */
     public boolean isInCheck(TeamColor teamColor) {
         TeamColor opp = opponent(teamColor);
-        for(var square : board.teamSquares.get(opp)){
+        ArrayList<ChessPosition> squares = board.getTeamSquares(opp);
+        for(var square : squares){
             if(board.getPiece(square).canSeeSquare(kingSquare(teamColor), board, square)){
                 return true;
             }
@@ -178,7 +164,7 @@ public class ChessGame {
         if (!isInCheck(teamColor)){
             return false;
         }
-        var squares = board.teamSquares.get(teamColor);
+        var squares = board.getTeamSquares(teamColor);
         System.out.println("isInCheckmate");
         System.out.println(squares + " pre validMoves");
         System.out.println(validMoves(squares.getFirst()));
@@ -207,7 +193,7 @@ public class ChessGame {
         if (isInCheck(teamColor)){
             return false;
         }
-        for (ChessPosition square : board.teamSquares.get(teamColor)){
+        for (ChessPosition square : board.getTeamSquares(teamColor)){
             if(!validMoves(square).isEmpty()){
                 return false;
             }
@@ -222,17 +208,13 @@ public class ChessGame {
      */
     public void setBoard(ChessBoard board) {
         this.board = board;
-        board.updateTeamSquares();
-        for (var square : board.teamSquares.get(TeamColor.WHITE)){
-            if (board.getPiece(square).getPieceType() == ChessPiece.PieceType.KING){
-                wkSquare = square;
-                break;
-            }
-        }
-        for (var square : board.teamSquares.get(TeamColor.BLACK)){
-            if (board.getPiece(square).getPieceType() == ChessPiece.PieceType.KING){
-                bkSquare = square;
-                break;
+        for (int row = 1; row <= 8; row++){
+            for (int col = 1; col <= 8; col++){
+                ChessPosition square = new ChessPosition(row, col);
+                if (board.getPiece(square) != null && board.getPiece(square).getPieceType()==ChessPiece.PieceType.KING){
+                    if (board.getPiece(square).getTeamColor() == TeamColor.WHITE){wkSquare = square;}
+                    if (board.getPiece(square).getTeamColor() == TeamColor.BLACK){bkSquare = square;}
+                }
             }
         }
     }

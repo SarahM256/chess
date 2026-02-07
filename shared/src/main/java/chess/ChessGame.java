@@ -105,7 +105,7 @@ public class ChessGame {
         ChessPiece piece = board.getPiece(start);
         TeamColor pieceColor = board.getPiece(start).getTeamColor();
         if (move.getPromotionPiece() != null){
-            board.addPiece(start, new ChessPiece(pieceColor, move.getPromotionPiece()));
+            piece = new ChessPiece(pieceColor, move.getPromotionPiece());
         }
         if(piece.getPieceType() == ChessPiece.PieceType.KING){
             if(piece.getTeamColor() == TeamColor.WHITE){

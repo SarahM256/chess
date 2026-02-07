@@ -248,10 +248,4 @@ public class ChessPiece {
         }
         return moves;
     }
-
-
-    private void castling(ChessBoard board, ChessPosition myPosition){
-        // will eventually implement castle i assume
-    }
-
 }
